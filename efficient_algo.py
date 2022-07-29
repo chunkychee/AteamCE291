@@ -25,7 +25,7 @@ class Node:
 #uses AStar Algo
 class Efficient_algo():
     #start_node and end node
-    def __init__(self, wall_pos, app, begin_x_pos, begin_y_pos, end_destination_x, end_destination_y):
+    def __init__(self, app, wall_pos, begin_x_pos, begin_y_pos, end_destination_x, end_destination_y):
         self.app = app
         self.begin_x_pos = begin_x_pos
         self.begin_y_pos = begin_y_pos
