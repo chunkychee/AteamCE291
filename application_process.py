@@ -3,9 +3,8 @@ from game_settings import *
 from buttons import *
 from efficient_algo import *
 from game_level_solver_algo import *
-from bidirectional_class import *
-from visualize_path_class import *
-from maze_class import *
+from path_editor import *
+from maze_game import *
 
 pygame.init()
 
@@ -31,7 +30,7 @@ class App:
         self.wall_pos = wall_nodes_coords_list.copy()
 
         # Maze Class Instantiation
-        self.maze = Maze(self, self.wall_pos)
+        self.maze = MazeGenerator(self, self.wall_pos)
 
         # Define Main-Menu buttons
         self.bfs_button = Buttons(self, WHITE, 228, MAIN_BUTTON_Y_POS, MAIN_BUTTON_LENGTH, MAIN_BUTTON_HEIGHT, 'Breadth-First Search')
@@ -206,7 +205,7 @@ class App:
         # Draw Background
         pygame.display.update()
         self.sketch_main_menu()
-        self.draw_text('Made By: Seung Jae Yang', self.screen, [1200, 720], 28, WHITE, FONT, centered=False)
+        self.draw_text('Agile Team', self.screen, [1000, 650], 28, WHITE, FONT, centered=False)
 
         # Check if game is running
         for event in pygame.event.get():
@@ -352,24 +351,7 @@ class App:
 
         ### BFS ###
 
-        if self.algorithm_state == 'bfs':
-            self.bfs = BreadthFirst(self, self.start_node_x, self.start_node_y, self.end_node_x, self.end_node_y, self.wall_pos)
-
-            if self.start_node_x or self.end_node_x is not None:
-                self.bfs.bfs_execute()
-
-            # Make Object for new path
-            if self.bfs.route_found:
-                self.draw_path = VisualizePath(self.screen, self.start_node_x, self.start_node_y, self.bfs.route, [])
-                self.draw_path.get_path_coords()
-                self.draw_path.draw_path()
-
-            else:
-                self.draw_text('NO ROUTE FOUND!', self.screen, [768,384], 50, RED, FONT, centered = True)
-
-        ### DFS ###
-
-        elif self.algorithm_state == 'dfs':
+        if self.algorithm_state == 'dfs':
             self.dfs = DepthFirst(self, self.start_node_x, self.start_node_y, self.end_node_x, self.end_node_y, self.wall_pos)
 
             if self.start_node_x or self.end_node_x is not None:
@@ -377,7 +359,7 @@ class App:
 
             # Make Object for new path
             if self.dfs.route_found:
-                self.draw_path = VisualizePath(self.screen, self.start_node_x, self.start_node_y, self.dfs.route, [])
+                self.draw_path = PathEditor(self.screen, self.start_node_x, self.start_node_y, self.dfs.route, [])
                 self.draw_path.get_path_coords()
                 self.draw_path.draw_path()
 
@@ -393,47 +375,12 @@ class App:
                 self.astar.astar_execute()
 
             if self.astar.route_found:
-                self.draw_path = VisualizePath(self.screen, self.start_node_x, self.start_node_y, None, self.astar.route)
+                self.draw_path = PathEditor(self.screen, self.start_node_x, self.start_node_y, None, self.astar.route)
                 self.draw_path.draw_path()
 
             else:
                 self.draw_text('NO ROUTE FOUND!', self.screen, [768, 384], 50, RED, FONT, centered=True)
 
-        ### DIJKSTRA ###
-
-        elif self.algorithm_state == 'dijkstra':
-            self.dijkstra = Dijkstra(self, self.start_node_x, self.start_node_y, self.end_node_x, self.end_node_y, self.wall_pos)
-
-            if self.start_node_x or self.end_node_x is not None:
-                self.dijkstra.dijkstra_execute()
-
-            if self.dijkstra.route_found:
-                self.draw_path = VisualizePath(self.screen, self.start_node_x, self.start_node_y, None, self.dijkstra.route)
-                self.draw_path.draw_path()
-
-            else:
-                self.draw_text('NO ROUTE FOUND!', self.screen, [768, 384], 50, RED, FONT, centered=True)
-
-        ### BIDRECTIONAL ###
-
-        elif self.algorithm_state == 'bidirectional':
-            self.bidirectional = Bidirectional(self, self.start_node_x, self.start_node_y, self.end_node_x, self.end_node_y, self.wall_pos)
-
-            if self.start_node_x or self.end_node_x is not None:
-                self.bidirectional.bidirectional_execute()
-
-            if self.bidirectional.route_found:
-                print(self.bidirectional.route_f)
-                print(self.bidirectional.route_r)
-                self.draw_path_f = VisualizePath(self.screen, self.start_node_x, self.start_node_y, None, self.bidirectional.route_f)
-                self.draw_path_r = VisualizePath(self.screen, self.end_node_x, self.end_node_y, None, self.bidirectional.route_r)
-
-                # Draw paths on the app
-                self.draw_path_f.draw_path()
-                self.draw_path_r.draw_path()
-
-            else:
-                self.draw_text('NO ROUTE FOUND!', self.screen, [768, 384], 50, RED, FONT, centered=True)
 
         pygame.display.update()
         self.state = 'aftermath'

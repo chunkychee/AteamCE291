@@ -1,4 +1,4 @@
-from game_setting import *
+from game_settings import *
 
 class DepthFirst():
     def __init__(self, app, start_node_x, start_node_y, end_node_x, end_node_y, wall_pos):
