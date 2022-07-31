@@ -25,6 +25,7 @@ class App:
 
         # creation of the pages
         self.mainMenu = pages.MainMenu(self.screen)
+        self.mazeGeneratorPage = pages.MazeGeneratorPage(self.screen)
 
     def checkQuit(self, events):
         """ Checks if the user want to close the app"""
@@ -58,6 +59,7 @@ class App:
         """ Makes the app run"""
         state = "mainMenu"
 
+
         while True:
             # get the events and quit the app if needed
             events = self.getEvents()
@@ -67,10 +69,18 @@ class App:
             # make the mainMenu functional
             if state == "mainMenu":
                 nextState = self.mainMenu.run(isLeftMouseButtonPressed)
+                if nextState == "MazeGenerator":
+                    self.mazeGeneratorPage.reset()  # reset the maze Generator page
 
-            elif state == "aboutPage":
-                nextState = self.aboutPage.run(isLeftMouseButtonPressed)
+            elif state == "MazeGenerator":
+                nextState = self.mazeGeneratorPage.run(isLeftMouseButtonPressed)
+
+            else:  # error message if the state dose not exist
+                print(f"The state {state} does not exist")
+                break
+
             state = nextState if nextState is not None else state  # change to the new state if it is not None
+
 
             # update the screen
             pygame.display.update()
