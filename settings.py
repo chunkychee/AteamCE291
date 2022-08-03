@@ -9,6 +9,9 @@ LIGHT_BLUE = "#5CE1E6"  # Explored Path
 RED = "#FF1616"  # Smart Solver Title
 LIGHT_RED = "#FF5757"  # Smart Solver Button
 YELLOW = "#FFDE59"  # Solution Path
+WHITE = (255, 255, 255)
+
+MAZE_COLOR = {0: WHITE, 1: GRAY, 2: DARK_BLUE, 3:LIGHT_RED}  # color of the maze tiles, 0: path, 1: wall, 2: start, 3: goal
 
 
 # ----- Screen Settings ----- #
@@ -24,12 +27,17 @@ DEFAULT_TEXT_COLOR = BLACK
 
 
 # ----- Buttons Settings ----- #
-DEFAULT_BUTTON_SIZE = (180, 60)
+DEFAULT_BUTTON_SIZE = (206, 45)  # default width and height of the buttons
 DEFAULT_BUTTON_COLOR = BLUE
-DEFAULT_ROUNDED_CORNER = 12  # default rounded corners (0 to deactivate)
-DEFAULT_OUTLINE_RADIUS = 3  # will make an outline of X px when the mouse is over the button
-DEFAULT_OUTLINE_COLOR = BLACK
+DEFAULT_ROUNDED_CORNER = 12  # default rounded corners value (0 to deactivate)
+DEFAULT_OUTLINE_RADIUS = 2  # will make an outline of X px when the mouse is over the button
+DEFAULT_OUTLINE_COLOR = GRAY
 DEFAULT_BUTTON_TEXT_COLOR = LIGHT_GRAY
 DEFAULT_BUTTON_FONT = DEFAULT_FONT
 DEFAULT_BUTTON_FONT_SIZE = 28
-DEFAULT_BUTTON_ZOOM_FACTOR = 3  # will make the button text bigger when the mouse is over the button (0 or False to deactivate)
+DEFAULT_BUTTON_ZOOM_FACTOR = 2  # will make the button text bigger when the mouse is over the button (0 or False to deactivate)
+
+
+# ----- Maze Generator Settings -----#
+PANEL_WIDTH = 280  # width of the panel which contains the stats and buttons
+

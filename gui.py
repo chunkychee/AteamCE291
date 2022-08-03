@@ -4,26 +4,42 @@ import settings
 
 class Text:
     def __init__(self, surface, text, pos, positionType="center", color=settings.DEFAULT_TEXT_COLOR,
-                 font=settings.DEFAULT_FONT, fontSize=settings.DEFAULT_FONT_SIZE, underline=False):
+                 font=settings.DEFAULT_FONT, fontSize=settings.DEFAULT_FONT_SIZE, underline=False, backgroundColor=None):
         """ Create the label and define the position of the text
 
             :param surface: place where the text will be draw (probably the screen)
             :param positionType: align the text to the pos with different manner (could be: center, topleft or topright)
             :param underline: sets whether the font should be rendered with an underline
+            :param backgroundColor: color behind the text
         """
         self.surface = surface
-        # create the label (text with the correct font and size and with an underline if needed)
-        label = pygame.font.SysFont(font, fontSize)
-        label.set_underline(underline)
-        self.label = label.render(text, True, color)
+        self.text = text
+        self.pos = pos
+        self.font = font
+        self.fontSize = fontSize
+        self.underline = underline
+        self.color = color
+        self.backgroundColor = backgroundColor
+        self.positionType = positionType
+        self.makeLabel(self.text)
+
+    def makeLabel(self, text):
+        """ create the label (text with the correct font and size and with an underline if needed)"""
+        label = pygame.font.SysFont(self.font, self.fontSize)
+        label.set_underline(self.underline)
+        self.label = label.render(text, True, self.color, self.backgroundColor)
         # define the position of the label(=text)
         self.labelRect = self.label.get_rect()
-        if positionType == "center":  # will center the text on the pos
-            self.labelRect.center = pos
-        elif positionType == "topleft":  # the top left of the text will be on the pos
-            self.labelRect.topleft = pos
-        elif positionType == "topright":  # the top right of the text will be on the pos
-            self.labelRect.topright = pos
+        if self.positionType == "center":  # will center the text on the pos
+            self.labelRect.center = self.pos
+        elif self.positionType == "topleft":  # the top left of the text will be on the pos
+            self.labelRect.topleft = self.pos
+        elif self.positionType == "topright":  # the top right of the text will be on the pos
+            self.labelRect.topright = self.pos
+
+    def addText(self, text):
+        """add some text to the preexisting text  """
+        self.makeLabel(self.text + text)
 
     def draw(self):
         self.surface.blit(self.label, self.labelRect)
@@ -33,12 +49,13 @@ class Paragraph:
     """ Create a multi-line text"""
 
     def __init__(self, surface, xPos, yStartPos, text, lineSpacing=12, color=settings.DEFAULT_TEXT_COLOR,
-                 font=settings.DEFAULT_FONT, fontSize=settings.DEFAULT_FONT_SIZE, underline=False):
+                 font=settings.DEFAULT_FONT, fontSize=settings.DEFAULT_FONT_SIZE, underline=False, backgroundColor=None):
         """
             :param xPos: the x position of the text, if xPos=None the line will be center on the screen
             :param yStartPos: the y start pos of the text
             :param text: String that can contain \n to start a new line
             :param lineSpacing: additional space between lines
+            :param backgroundColor: color behind the text
         """
         self.paragraph = []
         yOffset = 0
@@ -46,11 +63,26 @@ class Paragraph:
             yPos = yStartPos + nb * lineSpacing + yOffset
             if xPos is None:  # will center the line on the screen
                 self.paragraph.append(Text(surface, line, (settings.SCREEN_WIDTH // 2, yPos), positionType="center",
-                                           color=color, font=font, fontSize=fontSize, underline=underline))
+                                           color=color, font=font, fontSize=fontSize, underline=underline, backgroundColor=backgroundColor))
             else:  # the line will start at the xPos coord
                 self.paragraph.append(Text(surface, line, (xPos, yPos), positionType="topleft",
-                                           color=color, font=font, fontSize=fontSize, underline=underline))
+                                           color=color, font=font, fontSize=fontSize, underline=underline, backgroundColor=backgroundColor))
             yOffset += self.paragraph[-1].label.get_height() / 2  # add the height of the line to the yOffset
+
+    def addText(self, *text):
+        """ add some text to the end of the lines
+            for example addText("a", "bb") will add "a" at the end of the first line and "bb" to the second
+            :param text: text that will be added to the line of the paragraph
+            :return:
+        """
+        for lineNb, line in enumerate(text):
+            self.paragraph[lineNb].addText(str(line))
+
+    def resetText(self):
+        """ remove all text that has been add with the method addText
+        """
+        for line in self.paragraph:
+            line.addText("")
 
     def draw(self):
         for line in self.paragraph:
